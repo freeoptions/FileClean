@@ -1,0 +1,587 @@
+<Window x:Class="FileClean.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:FileClean.Converters"
+        Title="FileClean"
+        Width="1480"
+        Height="920"
+        MinWidth="1280"
+        MinHeight="820"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Background="#F5F7FB"
+        FontFamily="Microsoft YaHei UI, Segoe UI"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        TextOptions.TextHintingMode="Fixed"
+        Closing="Window_Closing"
+        Loaded="Window_Loaded"
+        KeyDown="Window_KeyDown">
+  <Window.Resources>
+    <converters:FileImageConverter x:Key="FileImageConverter" />
+
+    <SolidColorBrush x:Key="InkBrush" Color="#17202B" />
+    <SolidColorBrush x:Key="MutedBrush" Color="#667789" />
+    <SolidColorBrush x:Key="PanelBrush" Color="#F9FBFE" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="LineBrush" Color="#DDE7F1" />
+    <SolidColorBrush x:Key="PrimaryBrush" Color="#2F8C74" />
+    <SolidColorBrush x:Key="PrimaryTintBrush" Color="#E8F6F1" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#D85143" />
+    <SolidColorBrush x:Key="DangerTintBrush" Color="#FFF0ED" />
+
+    <Style x:Key="PanelCard" TargetType="Border">
+      <Setter Property="Background" Value="{StaticResource SurfaceBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="12" />
+      <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+
+    <Style x:Key="SectionEyebrow" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style x:Key="SectionTitle" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+      <Setter Property="FontSize" Value="22" />
+      <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <Style x:Key="MutedText" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style x:Key="PrimaryButton" TargetType="Button">
+      <Setter Property="Padding" Value="16,10" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonChrome" Background="{StaticResource PrimaryBrush}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="ButtonChrome" Property="Background" Value="#287B66" />
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="ButtonChrome" Property="Opacity" Value="0.48" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <Style x:Key="TintButton" TargetType="Button">
+      <Setter Property="Padding" Value="14,9" />
+      <Setter Property="BorderBrush" Value="#BBDDD2" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}" />
+      <Setter Property="Background" Value="{StaticResource PrimaryTintBrush}" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="ButtonChrome" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="ButtonChrome" Property="Background" Value="#FFFFFF" />
+                <Setter TargetName="ButtonChrome" Property="BorderBrush" Value="#B8C9D8" />
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="ButtonChrome" Property="Opacity" Value="0.48" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <Style x:Key="OutlineButton" TargetType="Button" BasedOn="{StaticResource TintButton}">
+      <Setter Property="Background" Value="#F6F9FC" />
+      <Setter Property="BorderBrush" Value="#DFE8F1" />
+      <Setter Property="Foreground" Value="#324457" />
+    </Style>
+
+    <Style x:Key="DangerButton" TargetType="Button" BasedOn="{StaticResource TintButton}">
+      <Setter Property="Background" Value="{StaticResource DangerTintBrush}" />
+      <Setter Property="BorderBrush" Value="#F1C2BA" />
+      <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+    </Style>
+
+    <Style TargetType="TextBox">
+      <Setter Property="Padding" Value="12,9" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="BorderBrush" Value="#D7E1EA" />
+      <Setter Property="Background" Value="#FFFFFF" />
+      <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style TargetType="ScrollViewer">
+      <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
+      <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+      <Setter Property="Focusable" Value="True" />
+      <Setter Property="PanningMode" Value="VerticalOnly" />
+    </Style>
+
+    <Style TargetType="DataGrid">
+      <Setter Property="AutoGenerateColumns" Value="False" />
+      <Setter Property="HeadersVisibility" Value="Column" />
+      <Setter Property="GridLinesVisibility" Value="None" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="RowBackground" Value="#F8FBFE" />
+      <Setter Property="AlternatingRowBackground" Value="#FFFFFF" />
+      <Setter Property="CanUserAddRows" Value="False" />
+      <Setter Property="CanUserDeleteRows" Value="False" />
+      <Setter Property="CanUserResizeRows" Value="False" />
+      <Setter Property="SelectionMode" Value="Single" />
+      <Setter Property="SelectionUnit" Value="FullRow" />
+      <Setter Property="Margin" Value="0,6,0,0" />
+    </Style>
+
+    <Style TargetType="DataGridColumnHeader">
+      <Setter Property="Background" Value="#EEF4F8" />
+      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Padding" Value="10,7" />
+      <Setter Property="BorderThickness" Value="0,0,0,1" />
+      <Setter Property="BorderBrush" Value="#DCE7F0" />
+    </Style>
+
+    <Style x:Key="GridCellText" TargetType="TextBlock">
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Padding" Value="10,0" />
+      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+      <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+    </Style>
+
+    <Style TargetType="DataGridCell">
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+      <Style.Triggers>
+        <Trigger Property="IsSelected" Value="True">
+          <Setter Property="Background" Value="Transparent" />
+          <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+          <Setter Property="BorderBrush" Value="Transparent" />
+        </Trigger>
+        <DataTrigger Binding="{Binding IsPreviewFocus}" Value="True">
+          <Setter Property="Background" Value="#DDF7E8" />
+          <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+
+    <Style TargetType="DataGridRow">
+      <Setter Property="MinHeight" Value="34" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Style.Triggers>
+        <Trigger Property="IsSelected" Value="True">
+          <Setter Property="Background" Value="{StaticResource PrimaryTintBrush}" />
+          <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        </Trigger>
+        <Trigger Property="IsMouseOver" Value="True">
+          <Setter Property="Background" Value="#EDF6FA" />
+        </Trigger>
+        <DataTrigger Binding="{Binding IsPreviewFocus}" Value="True">
+          <Setter Property="Background" Value="#DDF7E8" />
+          <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+  </Window.Resources>
+
+  <Grid Background="#F4F7FA">
+    <Grid Margin="10">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="292" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="460" />
+      </Grid.ColumnDefinitions>
+
+      <Border Grid.Column="0" Style="{StaticResource PanelCard}" Margin="0,0,8,0">
+        <ScrollViewer>
+          <StackPanel>
+            <Grid Margin="0,0,0,16">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <Border Width="42" Height="42" CornerRadius="8" Background="{StaticResource PrimaryBrush}">
+                <TextBlock Text="&#xE8B7;" FontFamily="Segoe MDL2 Assets" Foreground="White" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+              </Border>
+              <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource SectionEyebrow}" Text="重复文件清理" />
+                <TextBlock Text="FileClean" FontSize="26" FontWeight="Bold" Foreground="{StaticResource InkBrush}" />
+              </StackPanel>
+            </Grid>
+
+            <Border Background="#F4FAF7" CornerRadius="8" Padding="10" BorderBrush="#CDE8DF" BorderThickness="1" Margin="0,0,0,10">
+              <StackPanel>
+                <TextBlock Text="工作状态" Style="{StaticResource SectionEyebrow}" />
+                <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" FontSize="14" Foreground="#244437" Margin="0,8,0,10" />
+                <ProgressBar Height="8" Minimum="0" Maximum="100" Value="{Binding ProgressPercent, Mode=OneWay}" IsIndeterminate="{Binding IsProgressIndeterminate}" />
+                <TextBlock Text="{Binding ProgressDetailText}" TextWrapping="Wrap" FontSize="12" Foreground="#5C746D" Margin="0,8,0,0" />
+              </StackPanel>
+            </Border>
+
+            <Grid Margin="0,0,0,10">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <StackPanel>
+                <TextBlock Style="{StaticResource SectionEyebrow}" Text="固定目录" />
+                <TextBlock Style="{StaticResource SectionTitle}" Text="扫描范围" />
+              </StackPanel>
+              <Button Grid.Column="1" Style="{StaticResource TintButton}" Click="AddFolder_Click">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="&#xE8F4;" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" />
+                  <TextBlock Text="添加" />
+                </StackPanel>
+              </Button>
+            </Grid>
+
+            <ItemsControl ItemsSource="{Binding Folders}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border Background="#F8FBFE" BorderBrush="#E2EAF2" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,0,0,7">
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                      </Grid.ColumnDefinitions>
+                      <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" VerticalAlignment="Center" Checked="FolderEnabledChanged" Unchecked="FolderEnabledChanged" />
+                      <TextBlock Grid.Column="1" Text="{Binding Path}" TextWrapping="Wrap" Foreground="{StaticResource InkBrush}" Margin="10,0" />
+                      <Button Grid.Column="2" Tag="{Binding Path}" Style="{StaticResource DangerButton}" Padding="9,6" Click="RemoveFolder_Click" Content="移除" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="还没有固定目录，点击添加后勾选参与扫描。" Style="{StaticResource MutedText}" Visibility="{Binding NoFolderVisibility}" Margin="0,0,0,16" />
+
+            <Grid Margin="0,8,0,10">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <StackPanel>
+                <TextBlock Style="{StaticResource SectionEyebrow}" Text="排除目录" />
+                <TextBlock Text="这些目录不会被扫描" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource InkBrush}" />
+              </StackPanel>
+              <Button Grid.Column="1" Style="{StaticResource TintButton}" Click="AddExcludedFolder_Click">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="&#xE8F4;" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" />
+                  <TextBlock Text="添加" />
+                </StackPanel>
+              </Button>
+            </Grid>
+
+            <ItemsControl ItemsSource="{Binding ExcludedFolders}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border Background="#FFF7F5" BorderBrush="#F1D2CB" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,0,0,7">
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="{Binding}" TextWrapping="Wrap" Foreground="{StaticResource InkBrush}" Margin="0,0,10,0" />
+                      <Button Grid.Column="1" Tag="{Binding}" Style="{StaticResource DangerButton}" Padding="9,6" Click="RemoveExcludedFolder_Click" Content="移除" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBlock Text="还没有排除目录。" Style="{StaticResource MutedText}" Visibility="{Binding NoExcludedFolderVisibility}" Margin="0,0,0,14" />
+
+            <Separator Margin="0,8,0,16" />
+
+            <TextBlock Style="{StaticResource SectionEyebrow}" Text="自定义格式" />
+            <TextBlock Style="{StaticResource SectionTitle}" Text="后缀支持" Margin="0,0,0,10" />
+            <Grid Margin="0,0,0,10">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <TextBox Text="{Binding ExtensionInput, UpdateSourceTrigger=PropertyChanged}" ToolTip="例如 .psd 或 psd" />
+              <Button Grid.Column="1" Style="{StaticResource TintButton}" Margin="8,0,0,0" Click="AddExtension_Click" Content="添加" />
+            </Grid>
+            <ItemsControl ItemsSource="{Binding CustomExtensions}" Margin="0,0,0,16">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border Background="#F5F8FB" BorderBrush="#DFE8F1" BorderThickness="1" CornerRadius="8" Padding="9" Margin="0,0,6,6">
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                      </Grid.ColumnDefinitions>
+                      <TextBlock Text="{Binding}" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}" />
+                      <Button Grid.Column="1" Tag="{Binding}" Style="{StaticResource DangerButton}" Padding="8,4" Click="RemoveExtension_Click" Content="删除" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Separator Margin="0,4,0,16" />
+
+            <TextBlock Style="{StaticResource SectionEyebrow}" Text="配置导入导出" />
+            <TextBlock Style="{StaticResource SectionTitle}" Text="配置文件" Margin="0,0,0,10" />
+            <Border Background="#F8FBFE" BorderBrush="#E2EAF2" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,0,0,10">
+              <StackPanel>
+                <TextBlock Text="导出目录" Foreground="{StaticResource MutedBrush}" />
+                <TextBlock Text="{Binding ExportFolderText}" TextWrapping="Wrap" Foreground="{StaticResource InkBrush}" FontWeight="SemiBold" Margin="0,5,0,0" />
+              </StackPanel>
+            </Border>
+            <UniformGrid Columns="1">
+              <Button Style="{StaticResource OutlineButton}" Margin="0,0,0,8" Click="PickExportFolder_Click" Content="选择导出目录" />
+              <Button Style="{StaticResource OutlineButton}" Margin="0,0,0,8" Click="ImportConfig_Click" Content="导入 JSON" />
+              <Button Style="{StaticResource PrimaryButton}" Click="ExportConfig_Click" Content="导出 JSON" />
+            </UniformGrid>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+
+      <Grid Grid.Column="1">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Style="{StaticResource PanelCard}" Margin="0,0,8,8">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+              <TextBlock Style="{StaticResource SectionEyebrow}" Text="扫描首页" />
+              <TextBlock Text="找出重复图片和视频，保留最短路径文件" FontSize="23" FontWeight="Bold" Foreground="{StaticResource InkBrush}" Margin="0,2,0,3" />
+              <TextBlock Style="{StaticResource MutedText}" Text="按文件大小、快速指纹、完整 MD5 三层确认，尽量少读盘但保证最终结果准确。" />
+            </StackPanel>
+            <WrapPanel Grid.Column="1" VerticalAlignment="Center" Margin="14,0,0,0">
+              <Button Style="{StaticResource PrimaryButton}" Margin="0,0,8,8" Click="Scan_Click" IsEnabled="{Binding CanStartScan}">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" />
+                  <TextBlock Text="开始扫描" />
+                </StackPanel>
+              </Button>
+              <Button Style="{StaticResource OutlineButton}" Margin="0,0,8,8" Click="CancelScan_Click" IsEnabled="{Binding IsScanning}" Content="取消" />
+              <Button Style="{StaticResource TintButton}" Margin="0,0,8,8" Click="SelectDuplicates_Click" Content="勾选重复项" />
+              <Button Style="{StaticResource OutlineButton}" Margin="0,0,8,8" Click="ClearSelection_Click" Content="清空勾选" />
+              <Button Style="{StaticResource DangerButton}" Margin="0,0,0,8" Click="MoveToTrash_Click" IsEnabled="{Binding HasSelectedPaths}" Content="移到回收站" />
+            </WrapPanel>
+          </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Style="{StaticResource PanelCard}" Margin="0,0,8,0">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <StackPanel>
+                <TextBlock Style="{StaticResource SectionEyebrow}" Text="扫描结果" />
+                <TextBlock Style="{StaticResource SectionTitle}" Text="重复文件分组" />
+              </StackPanel>
+              <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="16,0,0,0">
+                <Border Background="#F7FAFD" BorderBrush="#E0EAF2" BorderThickness="1" CornerRadius="8" Padding="14,8" MinWidth="106" Margin="0,0,8,0">
+                  <StackPanel>
+                    <TextBlock Text="重复组" Style="{StaticResource MutedText}" />
+                    <TextBlock Text="{Binding Summary.DuplicateGroups}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource InkBrush}" />
+                  </StackPanel>
+                </Border>
+                <Border Background="#FFF8E8" BorderBrush="#F4DFAE" BorderThickness="1" CornerRadius="8" Padding="14,8" MinWidth="112">
+                  <StackPanel>
+                    <TextBlock Text="可释放" Style="{StaticResource MutedText}" />
+                    <TextBlock Text="{Binding Summary.ReclaimableText}" FontSize="20" FontWeight="Bold" Foreground="#8B5D14" />
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Grid>
+
+            <ScrollViewer Grid.Row="1" x:Name="ResultsScroll">
+              <Grid>
+                <Border Background="#F8FBFE" BorderBrush="#D9E5EF" BorderThickness="1" CornerRadius="8" Padding="24" Visibility="{Binding NoGroupsVisibility}">
+                  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="420">
+                    <TextBlock Text="&#xE8A5;" FontFamily="Segoe MDL2 Assets" FontSize="42" Foreground="{StaticResource PrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,12" />
+                    <TextBlock Text="还没有扫描结果" FontSize="22" FontWeight="Bold" Foreground="{StaticResource InkBrush}" TextAlignment="Center" />
+                    <TextBlock Text="添加并勾选目录后开始扫描，重复文件会按组展示在这里。" Style="{StaticResource MutedText}" TextAlignment="Center" Margin="0,8,0,0" />
+                  </StackPanel>
+                </Border>
+
+                <ItemsControl ItemsSource="{Binding DuplicateGroups}" Visibility="{Binding HasGroupsVisibility}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Border Background="#FBFDFE" BorderBrush="#E1EAF2" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,0,0,10">
+                        <Grid>
+                          <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                          </Grid.RowDefinitions>
+                          <TextBlock Text="{Binding DuplicateCount, StringFormat={}{0} 个重复文件}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource InkBrush}" Margin="0,0,0,2" />
+
+                          <DataGrid Grid.Row="1" ItemsSource="{Binding Items}" SelectionChanged="DuplicateGrid_SelectionChanged" PreviewMouseWheel="ForwardResultsMouseWheel">
+                            <DataGrid.Columns>
+                              <DataGridTemplateColumn Header="是否勾选" Width="88">
+                                <DataGridTemplateColumn.CellTemplate>
+                                  <DataTemplate>
+                                    <CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="DuplicateCheckChanged" Unchecked="DuplicateCheckChanged" />
+                                  </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                              </DataGridTemplateColumn>
+                              <DataGridTextColumn Header="后缀" Width="78" Binding="{Binding Extension}" ElementStyle="{StaticResource GridCellText}" />
+                              <DataGridTextColumn Header="文件名" Width="1.1*" Binding="{Binding Name}" ElementStyle="{StaticResource GridCellText}" />
+                              <DataGridTextColumn Header="路径" Width="2.4*" Binding="{Binding Path}" ElementStyle="{StaticResource GridCellText}" />
+                              <DataGridTextColumn Header="大小" Width="96" Binding="{Binding SizeText}" ElementStyle="{StaticResource GridCellText}" />
+                            </DataGrid.Columns>
+                          </DataGrid>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </Grid>
+            </ScrollViewer>
+          </Grid>
+        </Border>
+      </Grid>
+
+      <Border Grid.Column="2" x:Name="FocusPane" Style="{StaticResource PanelCard}" PreviewMouseWheel="BrowsePreviewMouseWheel">
+        <ScrollViewer x:Name="FocusPaneScroll">
+          <StackPanel>
+            <TextBlock Style="{StaticResource SectionEyebrow}" Text="预览" />
+            <TextBlock Style="{StaticResource SectionTitle}" Text="焦点文件" Margin="0,0,0,10" />
+
+            <Border Background="#F8FBFE" BorderBrush="#DCE7F0" BorderThickness="1" CornerRadius="8" Padding="8" MinHeight="520" Visibility="{Binding HasSelectedItemVisibility}" Cursor="Hand" ToolTip="点击打开大预览，滚轮切换文件" MouseLeftButtonUp="OpenPreview_Click">
+              <Grid>
+                <Image Source="{Binding SelectedDuplicateItem.Path, Converter={StaticResource FileImageConverter}, ConverterParameter=520}" Stretch="UniformToFill" Visibility="{Binding FocusImageVisibility}" />
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding FocusVideoVisibility}">
+                  <TextBlock Text="&#xE714;" FontFamily="Segoe MDL2 Assets" FontSize="54" Foreground="{StaticResource PrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,12" />
+                  <TextBlock Text="视频文件" FontSize="20" FontWeight="Bold" Foreground="{StaticResource InkBrush}" HorizontalAlignment="Center" />
+                  <TextBlock Text="可通过“打开位置”用系统播放器查看。" Style="{StaticResource MutedText}" TextAlignment="Center" Width="240" Margin="0,8,0,0" />
+                </StackPanel>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding FocusFileVisibility}">
+                  <TextBlock Text="&#xE7C3;" FontFamily="Segoe MDL2 Assets" FontSize="54" Foreground="{StaticResource MutedBrush}" HorizontalAlignment="Center" Margin="0,0,0,12" />
+                  <TextBlock Text="当前格式不支持内置预览" Style="{StaticResource MutedText}" TextAlignment="Center" Width="240" />
+                </StackPanel>
+                <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="#C917202B" CornerRadius="8" Padding="10,7" Visibility="{Binding HasSelectedItemVisibility}">
+                  <TextBlock Text="点击预览" Foreground="White" FontWeight="SemiBold" FontSize="12" />
+                </Border>
+                <Border HorizontalAlignment="Left" VerticalAlignment="Top" Background="#EFFFFFFF" CornerRadius="8" Padding="10,7" Visibility="{Binding HasSelectedItemVisibility}" MaxWidth="380">
+                  <TextBlock Text="{Binding CurrentPreviewPositionText}" Foreground="{StaticResource InkBrush}" FontWeight="SemiBold" FontSize="12" TextTrimming="CharacterEllipsis" />
+                </Border>
+              </Grid>
+            </Border>
+
+            <Border Background="#F8FBFE" BorderBrush="#DCE7F0" BorderThickness="1" CornerRadius="8" Padding="24" MinHeight="520" Visibility="{Binding NoSelectedItemVisibility}">
+              <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="&#xE8A5;" FontFamily="Segoe MDL2 Assets" FontSize="44" Foreground="{StaticResource PrimaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,12" />
+                <TextBlock Text="点选一条结果" FontSize="22" FontWeight="Bold" Foreground="{StaticResource InkBrush}" TextAlignment="Center" />
+                <TextBlock Text="右侧会始终停留在这里，显示当前焦点文件的预览和详情。" Style="{StaticResource MutedText}" TextAlignment="Center" Margin="0,8,0,0" />
+              </StackPanel>
+            </Border>
+
+            <StackPanel Visibility="{Binding HasSelectedItemVisibility}" Margin="0,12,0,0">
+              <Border Background="#F8FBFE" BorderBrush="#E2EAF2" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,0,0,8">
+                <StackPanel>
+                  <TextBlock Text="文件名" Style="{StaticResource MutedText}" />
+                  <TextBlock Text="{Binding SelectedDuplicateItem.Name}" TextWrapping="Wrap" FontWeight="Bold" Foreground="{StaticResource InkBrush}" Margin="0,6,0,0" />
+                </StackPanel>
+              </Border>
+              <Border Background="#F8FBFE" BorderBrush="#E2EAF2" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,0,0,8">
+                <StackPanel>
+                  <TextBlock Text="路径" Style="{StaticResource MutedText}" />
+                  <TextBlock Text="{Binding SelectedDuplicateItem.Path}" TextWrapping="Wrap" FontWeight="SemiBold" Foreground="{StaticResource InkBrush}" Margin="0,6,0,0" />
+                </StackPanel>
+              </Border>
+              <Border Background="#F8FBFE" BorderBrush="#E2EAF2" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0,0,0,8">
+                <StackPanel>
+                  <TextBlock Text="大小" Style="{StaticResource MutedText}" />
+                  <TextBlock Text="{Binding SelectedDuplicateItem.SizeText}" FontWeight="Bold" Foreground="{StaticResource InkBrush}" Margin="0,6,0,0" />
+                </StackPanel>
+              </Border>
+              <Border Background="#F8FBFE" BorderBrush="#E2EAF2" BorderThickness="1" CornerRadius="8" Padding="10">
+                <StackPanel>
+                  <TextBlock Text="MD5" Style="{StaticResource MutedText}" />
+                  <TextBlock Text="{Binding SelectedDuplicateItem.Md5}" TextWrapping="Wrap" FontFamily="Consolas" Foreground="{StaticResource PrimaryBrush}" FontWeight="SemiBold" Margin="0,6,0,0" />
+                </StackPanel>
+              </Border>
+              <Button Style="{StaticResource PrimaryButton}" Margin="0,12,0,0" Click="ShowSelectedInFolder_Click" Content="打开文件位置" />
+            </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+    </Grid>
+
+    <Border x:Name="PreviewOverlayBackdrop"
+            Panel.ZIndex="150"
+            Visibility="{Binding PreviewOverlayVisibility}"
+            Background="#D9141B24"
+            MouseLeftButtonUp="ClosePreviewOverlay_Click">
+      <Grid Margin="24">
+        <Border Background="#111A23" CornerRadius="8" Padding="14">
+          <Grid>
+            <Image Source="{Binding PreviewItem.Path, Converter={StaticResource FileImageConverter}, ConverterParameter=1800}"
+                   Stretch="Uniform"
+                   Visibility="{Binding PreviewOverlayImageVisibility}" />
+            <MediaElement Source="{Binding PreviewItemUri}"
+                          LoadedBehavior="Play"
+                          UnloadedBehavior="Stop"
+                          Stretch="Uniform"
+                          Visibility="{Binding PreviewOverlayVideoVisibility}" />
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding PreviewOverlayFileVisibility}">
+              <TextBlock Text="&#xE7C3;" FontFamily="Segoe MDL2 Assets" FontSize="56" Foreground="#B9C7D6" HorizontalAlignment="Center" Margin="0,0,0,12" />
+              <TextBlock Text="当前文件不支持大预览" Foreground="White" FontSize="22" FontWeight="Bold" TextAlignment="Center" />
+              <TextBlock Text="可以关闭预览后通过右侧按钮打开文件位置。" Foreground="#B9C7D6" FontSize="14" TextAlignment="Center" Margin="0,8,0,0" />
+            </StackPanel>
+            <Border HorizontalAlignment="Right" VerticalAlignment="Top" Background="#D9FFFFFF" CornerRadius="8" Padding="12,8">
+              <TextBlock Text="点击任意位置关闭" Foreground="#17202B" FontWeight="SemiBold" />
+            </Border>
+          </Grid>
+        </Border>
+      </Grid>
+    </Border>
+
+    <Border HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Margin="0,16,0,0"
+            Background="#F4FAF7"
+            BorderBrush="#B9E1D4"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="16,12"
+            Visibility="{Binding ToastVisibility}">
+      <TextBlock Text="{Binding ToastText}" Foreground="#1F6A50" FontWeight="SemiBold" />
+    </Border>
+  </Grid>
+</Window>
