@@ -18,4 +18,9 @@
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="build\icon.ico" />
+    <Resource Include="build\icon.png" />
+  </ItemGroup>
 </Project>

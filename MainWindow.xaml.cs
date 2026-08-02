@@ -274,16 +274,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             return;
         }
 
-        var iconPath = Path.Combine(AppContext.BaseDirectory, "build", "icon.ico");
-        Icon icon;
-        try
-        {
-            icon = File.Exists(iconPath) ? new Icon(iconPath) : (Icon)SystemIcons.Application.Clone();
-        }
-        catch
-        {
-            icon = (Icon)SystemIcons.Application.Clone();
-        }
+        var icon = LoadTrayIcon();
 
         _notifyIcon = new WinForms.NotifyIcon
         {
@@ -296,6 +287,34 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         _notifyIcon.ContextMenuStrip.Items.Add("显示软件", null, (_, _) => Dispatcher.Invoke(ShowMainWindow));
         _notifyIcon.ContextMenuStrip.Items.Add("退出", null, (_, _) => Dispatcher.Invoke(ExitApplication));
         _notifyIcon.DoubleClick += (_, _) => Dispatcher.Invoke(ShowMainWindow);
+    }
+
+    private static Icon LoadTrayIcon()
+    {
+        try
+        {
+            var resourceUri = new Uri("pack://application:,,,/build/icon.ico", UriKind.Absolute);
+            var resource = System.Windows.Application.GetResourceStream(resourceUri);
+            if (resource?.Stream is not null)
+            {
+                using var embeddedIcon = new Icon(resource.Stream, WinForms.SystemInformation.SmallIconSize);
+                return (Icon)embeddedIcon.Clone();
+            }
+        }
+        catch
+        {
+            // 内嵌资源异常时继续尝试发布目录中的兼容路径。
+        }
+
+        var iconPath = Path.Combine(AppContext.BaseDirectory, "build", "icon.ico");
+        try
+        {
+            return File.Exists(iconPath) ? new Icon(iconPath) : (Icon)SystemIcons.Application.Clone();
+        }
+        catch
+        {
+            return (Icon)SystemIcons.Application.Clone();
+        }
     }
 
     private void ShowMainWindow()
