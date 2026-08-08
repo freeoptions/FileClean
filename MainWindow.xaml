@@ -324,8 +324,8 @@
           <Setter Property="BorderBrush" Value="Transparent" />
         </Trigger>
         <DataTrigger Binding="{Binding IsPreviewFocus}" Value="True">
-          <Setter Property="Background" Value="#DDF7E8" />
-          <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+          <Setter Property="Background" Value="#E3F0FF" />
+          <Setter Property="Foreground" Value="#153B63" />
         </DataTrigger>
       </Style.Triggers>
     </Style>
@@ -344,8 +344,10 @@
           <Setter Property="Background" Value="#EAF3EE" />
         </Trigger>
         <DataTrigger Binding="{Binding IsPreviewFocus}" Value="True">
-          <Setter Property="Background" Value="#DDF7E8" />
-          <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+          <Setter Property="Background" Value="#E3F0FF" />
+          <Setter Property="Foreground" Value="#153B63" />
+          <Setter Property="BorderBrush" Value="#4B8FD8" />
+          <Setter Property="BorderThickness" Value="3,0,0,0" />
         </DataTrigger>
       </Style.Triggers>
     </Style>

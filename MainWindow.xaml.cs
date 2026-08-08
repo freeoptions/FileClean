@@ -34,6 +34,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     private ObservableCollection<DuplicateGroup> _duplicateGroups = [];
     private ScanSummary _summary = new();
     private DuplicateItem? _selectedDuplicateItem;
+    private int _centerSelectionRequestVersion;
     private DuplicateItem? _previewItem;
     private string _statusMessage = "先固定常用目录，再勾选本次参与扫描的目录，然后开始扫描。";
     private string _progressDetailText = "等待扫描。";
@@ -116,7 +117,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             OnPropertyChanged(nameof(FocusFileVisibility));
             OnPropertyChanged(nameof(CurrentPreviewPositionText));
             PreloadAdjacentPreviewImages();
-            ScrollFocusedResultIntoView();
+            CenterFocusedResultInView(_selectedDuplicateItem);
 
             if (PreviewItem is not null)
             {
@@ -752,34 +753,51 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
     }
 
-    private void ScrollFocusedResultIntoView()
+    private void CenterFocusedResultInView(DuplicateItem? item)
     {
-        if (SelectedDuplicateItem is null)
+        var requestVersion = ++_centerSelectionRequestVersion;
+        if (item is null)
         {
             return;
         }
 
         Dispatcher.BeginInvoke(new Action(() =>
         {
-            if (SelectedDuplicateItem is null)
+            if (requestVersion != _centerSelectionRequestVersion
+                || !ReferenceEquals(item, SelectedDuplicateItem))
             {
                 return;
             }
 
-            var grid = FindDataGridForItem(ResultsScroll, SelectedDuplicateItem);
+            var grid = FindDataGridForItem(ResultsScroll, item);
             if (grid is null)
             {
                 return;
             }
 
-            grid.ScrollIntoView(SelectedDuplicateItem);
+            // Realize the virtualized row, then center it synchronously before the
+            // next render so the temporary edge-aligned position is never painted.
+            grid.ScrollIntoView(item);
             grid.UpdateLayout();
+            ResultsScroll.UpdateLayout();
 
-            if (grid.ItemContainerGenerator.ContainerFromItem(SelectedDuplicateItem) is FrameworkElement row)
+            if (requestVersion != _centerSelectionRequestVersion
+                || !ReferenceEquals(item, SelectedDuplicateItem)
+                || grid.ItemContainerGenerator.ContainerFromItem(item) is not FrameworkElement row
+                || row.ActualHeight <= 0
+                || ResultsScroll.ViewportHeight <= 0)
             {
-                row.BringIntoView();
+                return;
             }
-        }), System.Windows.Threading.DispatcherPriority.Background);
+
+            var rowCenter = row.TransformToAncestor(ResultsScroll)
+                .Transform(new System.Windows.Point(0, row.ActualHeight / 2)).Y;
+            var viewportCenter = ResultsScroll.ViewportHeight / 2;
+            var centeredOffset = ResultsScroll.VerticalOffset + rowCenter - viewportCenter;
+            var clampedOffset = Math.Clamp(centeredOffset, 0, ResultsScroll.ScrollableHeight);
+
+            ResultsScroll.ScrollToVerticalOffset(clampedOffset);
+        }), System.Windows.Threading.DispatcherPriority.Loaded);
     }
 
     private static DataGrid? FindDataGridForItem(DependencyObject root, DuplicateItem item)
