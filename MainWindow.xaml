@@ -755,7 +755,7 @@
               </Border>
             </Grid>
 
-            <Border Background="#17241F" BorderBrush="#263A32" BorderThickness="1" CornerRadius="15" Padding="8" MinHeight="500" Visibility="{Binding HasSelectedItemVisibility}" Cursor="Hand" ToolTip="点击打开大预览，滚轮切换文件" MouseLeftButtonUp="OpenPreview_Click">
+            <Border Background="#17241F" BorderBrush="#263A32" BorderThickness="1" CornerRadius="15" Padding="8" MinHeight="500" Visibility="{Binding HasSelectedItemVisibility}" Cursor="Hand" MouseLeftButtonUp="OpenPreview_Click">
               <Grid ClipToBounds="True">
                 <Image Source="{Binding SelectedDuplicateItem.Path, Converter={StaticResource FileImageConverter}, ConverterParameter=520}" Stretch="Uniform" Visibility="{Binding FocusImageVisibility}" />
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding FocusVideoVisibility}">
