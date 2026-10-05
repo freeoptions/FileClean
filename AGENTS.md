@@ -1,6 +1,6 @@
 ﻿# FileClean 项目专属规则
 
-通用规则见：`E:\@imFile-Download\AI-Useful-Prompt\通用开发工作规则.md`。
+本项目继承 Codex 已加载的全局 `AGENTS.md`（本机：`C:\Users\freez\.codex\AGENTS.md`）；以下保留项目专属规则。
 
 - 本项目是 Windows WPF C# 文件清理工具，项目文件为 `FileClean.csproj`。
 - 核心功能是扫描图片/视频重复文件、分组展示、勾选并移动到系统回收站；不得改成永久删除。
