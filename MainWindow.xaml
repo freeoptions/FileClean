@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:converters="clr-namespace:FileClean.Converters"
+        xmlns:controls="clr-namespace:FileClean.Controls"
         Title="FileClean"
         Icon="build/icon.ico"
         Width="1480"
@@ -757,7 +758,7 @@
 
             <Border Background="#17241F" BorderBrush="#263A32" BorderThickness="1" CornerRadius="15" Padding="8" MinHeight="500" Visibility="{Binding HasSelectedItemVisibility}" Cursor="Hand" MouseLeftButtonUp="OpenPreview_Click">
               <Grid ClipToBounds="True">
-                <Image Source="{Binding SelectedDuplicateItem.Path, Converter={StaticResource FileImageConverter}, ConverterParameter=520}" Stretch="Uniform" Visibility="{Binding FocusImageVisibility}" />
+                <controls:FilePreviewImage FilePath="{Binding SelectedDuplicateItem.Path}" DecodePixelWidth="520" Stretch="Uniform" Visibility="{Binding FocusImageVisibility}" />
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding FocusVideoVisibility}">
                   <Border Width="76" Height="76" CornerRadius="38" Background="#29453A" Margin="0,0,0,14">
                     <TextBlock Text="&#xE714;" Style="{StaticResource IconGlyph}" FontSize="30" Foreground="#BFE6D8" />
@@ -847,7 +848,7 @@
       <Grid Margin="28">
         <Border Background="#101A16" BorderBrush="#34463F" BorderThickness="1" CornerRadius="18" Padding="14">
           <Grid>
-            <Image Source="{Binding PreviewItem.Path, Converter={StaticResource FileImageConverter}, ConverterParameter=1800}"
+            <controls:FilePreviewImage FilePath="{Binding PreviewItem.Path}" DecodePixelWidth="1800"
                    Stretch="Uniform"
                    Visibility="{Binding PreviewOverlayImageVisibility}" />
             <MediaElement Source="{Binding PreviewItemUri}"

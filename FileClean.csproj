@@ -20,6 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="XamlAnimatedGif" Version="2.3.2" />
     <Resource Include="build\icon.ico" />
     <Resource Include="build\icon.png" />
   </ItemGroup>

@@ -9,6 +9,7 @@ FileClean 是一个面向 Windows 的重复图片/视频扫描工具，支持固
   - `.jpg` `.jpeg` `.png` `.webp` `.gif` `.bmp` `.tif` `.tiff` `.heic` `.heif` `.avif` `.svg`
 - 支持常见视频格式
   - `.mp4` `.mov` `.mkv` `.avi` `.wmv` `.flv` `.webm` `.m4v` `.mpeg` `.mpg` `.ts` `.mts` `.m2ts` `.3gp` `.3g2` `.ogv`
+- GIF 在右侧预览和大预览中自动循环播放；切换文件、关闭预览或隐藏/最小化窗口时释放播放资源。
 - 固定目录扫描
 - 结果按重复组展示
 - 结果字段包含
