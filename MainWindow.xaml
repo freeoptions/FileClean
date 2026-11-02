@@ -737,7 +737,7 @@
 
       <!-- 右侧：固定焦点预览，不随中间结果滚动。 -->
       <Border Grid.Column="2" x:Name="FocusPane" Style="{StaticResource PanelCard}" Padding="16" PreviewMouseWheel="BrowsePreviewMouseWheel">
-        <ScrollViewer x:Name="FocusPaneScroll">
+        <ScrollViewer x:Name="FocusPaneScroll" SizeChanged="FocusPaneScroll_SizeChanged">
           <StackPanel>
             <Grid Margin="2,0,2,14">
               <Grid.ColumnDefinitions>
@@ -756,7 +756,7 @@
               </Border>
             </Grid>
 
-            <Border Background="#17241F" BorderBrush="#263A32" BorderThickness="1" CornerRadius="15" Padding="8" MinHeight="500" Visibility="{Binding HasSelectedItemVisibility}" Cursor="Hand" MouseLeftButtonUp="OpenPreview_Click">
+            <Border x:Name="FocusPreviewFrame" Background="#17241F" BorderBrush="#263A32" BorderThickness="1" CornerRadius="15" Padding="8" Visibility="{Binding HasSelectedItemVisibility}" Cursor="Hand" MouseLeftButtonUp="OpenPreview_Click">
               <Grid ClipToBounds="True">
                 <controls:FilePreviewImage FilePath="{Binding SelectedDuplicateItem.Path}" DecodePixelWidth="520" Stretch="Uniform" Visibility="{Binding FocusImageVisibility}" />
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding FocusVideoVisibility}">
@@ -782,7 +782,7 @@
               </Grid>
             </Border>
 
-            <Border Background="#F6F8F6" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="15" Padding="28" MinHeight="500" Visibility="{Binding NoSelectedItemVisibility}">
+            <Border x:Name="FocusPreviewEmptyFrame" Background="#F6F8F6" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" CornerRadius="15" Padding="28" Visibility="{Binding NoSelectedItemVisibility}">
               <StackPanel VerticalAlignment="Center">
                 <Border Width="80" Height="80" CornerRadius="25" Background="{StaticResource PrimaryTintBrush}" HorizontalAlignment="Center" Margin="0,0,0,18">
                   <TextBlock Text="&#xE8A7;" Style="{StaticResource IconGlyph}" FontSize="28" Foreground="{StaticResource PrimaryBrush}" />

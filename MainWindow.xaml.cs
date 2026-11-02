@@ -256,6 +256,14 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         private set => SetProperty(ref _toastVisibility, value);
     }
 
+    private void FocusPaneScroll_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        // 按右侧可用高度限定预览，避免长图在滚动容器中按宽度无限撑高。
+        var previewHeight = Math.Max(0, e.NewSize.Height * 2 / 3);
+        FocusPreviewFrame.Height = previewHeight;
+        FocusPreviewEmptyFrame.Height = previewHeight;
+    }
+
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
         SetupTray();
